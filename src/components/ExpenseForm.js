@@ -1,11 +1,8 @@
 import React from 'react';
-import {connect} from 'react-redux';
 import moment from 'moment';
 import { SingleDatePicker } from 'react-dates';
-import 'react-dates/lib/css/_datepicker.css';
 
-const now = moment();
-console.log(now.format("MMM Do, YYYY"));
+
 
 export default class ExpenseForm extends React.Component {
 
@@ -18,7 +15,7 @@ export default class ExpenseForm extends React.Component {
       description: description,
       note: note,
       amount: amount && (amount /100).toString(),
-      createdAt: moment(createdAt),
+      createdAt: moment(),
       calendarFocused: false,
       error: ""
     };
@@ -76,11 +73,10 @@ export default class ExpenseForm extends React.Component {
         }));
       this.props.onSubmit({
         description,
-        amount: parseFloat(amount),
+        amount: parseFloat(amount) * 100,
         createdAt: createdAt.valueOf(),
         note,
       });
-      console.log("submitted");
     }
   }
   //only dispatch if user submits the form.
