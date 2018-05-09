@@ -1,5 +1,8 @@
 node_modules/
 __snapshots__/
-bundle.js
+public/bundle.js
+public/bundle.js.map
+public/styles.css.map
+public/styles.css
 
 *.log
