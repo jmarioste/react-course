@@ -1,36 +1,57 @@
-import React from 'react';
-import {connect } from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import ExpenseForm from './ExpenseForm';
-import {editExpense, removeExpense} from '../actions/expenses';
-const EditExpensePage = (props) => {
-  const id = props.expense.id;
-  return (
-    <div>
-      <ExpenseForm 
-        expense={props.expense}
-        onSubmit={(updates)=>{
-          props.dispatch(editExpense(id, updates))
-          props.history.push('/');
-        }}
-      />
+import { editExpense, removeExpense } from '../actions/expenses';
 
-      <button onClick={(e)=>{
-          props.dispatch(removeExpense({ id }));
-          props.history.push('/');
-        }}> 
-        Remove 
-      </button>
-    </div>
-  )
+
+
+export class EditExpensePage extends Component {
+
+  onSubmit = (id, updates) => {
+    this.props.editExpense(id, updates);
+    this.props.history.push('/');
+  };
+
+  onClickRemove = () => {
+    const id = this.props.expense.id;
+    this.props.removeExpense({ id });
+    this.props.history.push('/');
+  };
+
+  render() {
+    return (
+      <div>
+        <ExpenseForm
+          expense={this.props.expense}
+          onSubmit={this.onSubmit}
+        />
+
+        <button onClick={this.onClickRemove}>
+          Remove
+        </button>
+      </div>
+    )
+  }
 }
 
 
-const mapStateToProps = (state, props)=> {
+const mapStateToProps = (state, props) => {
   return {
-    expense: state.expenses.find((expense)=>{
+    expense: state.expenses.find((expense) => {
       return expense.id === props.match.params.id;
     })
   }
 }
 
-export default connect(mapStateToProps)(EditExpensePage);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    editExpense: (id, updates) => {
+      return dispatch(editExpense(id, updates));
+    },
+    removeExpense: ({ id }) => {
+      dispatch(removeExpense({ id }))
+    }
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(EditExpensePage);

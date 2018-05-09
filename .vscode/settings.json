@@ -17,5 +17,7 @@
         "**/web/node_modules": true,
         "**/public": true, // will change frequently by build command
         "**/admin/node_modules": true
-    }
+    },
+    "editor.formatOnPaste": true,
+    "editor.formatOnSave": true,
 }
