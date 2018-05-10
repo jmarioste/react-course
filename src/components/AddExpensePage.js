@@ -1,14 +1,15 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux';
 import ExpenseForm from './ExpenseForm';
-import { addExpense } from '../actions/expenses';
+import { startAddExpense } from '../actions/expenses';
 
 
+//component should not know about the database.
 
 export class AddExpensePage extends Component {
 
   onSubmit = (expense) => {
-    this.props.addExpense(expense);
+    this.props.startAddExpense(expense);
     this.props.history.push('/');
   };
 
@@ -25,8 +26,8 @@ export class AddExpensePage extends Component {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    addExpense: (expense) => {
-      return dispatch(addExpense(expense));
+    startAddExpense: (expense) => {
+      return dispatch(startAddExpense(expense));
     }
   };
 };
