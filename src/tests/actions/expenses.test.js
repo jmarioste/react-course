@@ -9,7 +9,8 @@ import {
   startAddExpense,
   setExpenses,
   startSetExpenses,
-  startRemoveExpense
+  startRemoveExpense,
+  startEditExpense
 } from '../../actions/expenses';
 import expenses from '../fixtures/expenses';
 import database from '../../firebase/firebase';
@@ -135,7 +136,7 @@ test('should add expense with defaults to database and store', (done) => {
 
 test('should remove expense from firebase', (done) => {
   const store = createMockStore({});
-  const id = expenses[0].id
+  const id = expenses[0].id;
   store.dispatch(startRemoveExpense({ id })).then(() => {
     const actions = store.getActions();
     expect(actions[0]).toEqual({
@@ -143,13 +144,38 @@ test('should remove expense from firebase', (done) => {
       id
     });
 
-    return database.ref('expenses').once('value')
+    return database.ref(`expenses/${id}`).once('value')
   }).then((snapshot) => {
-    const stuff = snapshot.val();
-
-    expect(stuff[id]).toBeUndefined();
+    expect(snapshot.val()).toBeNull();
     done();
   }).catch((e) => {
     console.log('Error', e.message);
   })
+});
+
+test('should edit expense from firebase', (done) => {
+  const store = createMockStore({});
+  const id = expenses[0].id;
+  const updates = {
+    note: "This is my note"
+  };
+  store.dispatch(startEditExpense(id, updates)).then(() => {
+    const actions = store.getActions();
+    expect(actions[0]).toEqual({
+      type: 'EDIT_EXPENSE',
+      id,
+      updates
+    });
+
+    return database.ref(`expenses/${id}`).once('value');
+  }).then((snapshot) => {
+    expect(snapshot.val()).toEqual({
+      ...expenses[0],
+      ...updates,
+      id: undefined
+    });
+    done();
+  }).catch((e) => {
+    console.log('error', e.message);
+  });
 })
