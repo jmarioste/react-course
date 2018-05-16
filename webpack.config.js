@@ -15,7 +15,7 @@ module.exports = (env, argv) => {
   const isProduction = env === 'production';
   const CSSExtract = new ExtractTextPlugin('styles.css');
   return {
-    entry: "./src/app.js",
+    entry: ['babel-polyfill', "./src/app.js"],
     // entry: "./src/playground/hoc.js",
     output: {
       path: path.join(__dirname, 'public', 'dist'), //absolute path
